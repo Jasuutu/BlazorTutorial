@@ -6,9 +6,9 @@
 @inject IRepository repo
 @inject NavigationManager nm
 
-<h1>ConnectorViewer (@Document)</h1>
+<h1 class="d-inline">Connector Viewer: @headerInfo</h1>
 
-<div class my-1>
+<div class="my-1">
     <button class="btn btn-primary" @onclick="@(() => nm.NavigateTo("/connectorviewer/clients"))">Clients</button>
     <button class="btn btn-primary" @onclick="@(() => nm.NavigateTo("/connectorviewer/companies"))">Companies</button>
     <button class="btn btn-primary" @onclick="@(() => nm.NavigateTo("/connectorviewer/contacts"))">Contacts</button>
@@ -33,6 +33,7 @@
 
 @code {
     private List<DocumentInfo> docInfos = new List<DocumentInfo>();
+    private string headerInfo;
 
     [Parameter]
     public string Document { get; set; }
@@ -49,6 +50,7 @@
         {
             var results = repo.GetAllDocInfos(Document);
             docInfos = results.ToList();
+            headerInfo = $"{char.ToUpper(Document.First())}{Document.Substring(1)} - {docInfos.Count}";
             this.StateHasChanged();
         }
     }

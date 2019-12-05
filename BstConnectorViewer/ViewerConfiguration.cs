@@ -10,7 +10,16 @@ namespace BstConnectorViewer
 
         public ViewerConfiguration(IConfiguration config)
         {
-            BaseUrl = config.GetSection("BaseUrl").Value;
+            var configBaseUrl = config.GetSection("BaseUrl").Value;
+            if (!string.IsNullOrEmpty(configBaseUrl))
+            {
+                BaseUrl = configBaseUrl;
+            }
+            else
+            {
+                BaseUrl = "https://localhost/";
+            }
+            
             CertificateSerialNumber = config.GetSection("CertNumber").Value;
         }
 

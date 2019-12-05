@@ -64,7 +64,10 @@ namespace BstConnectorViewer
         private string GetWebResponse(HttpWebRequest newRequest)
         {
             var certificate = GetCertificate();
-            newRequest.ClientCertificates.Add(certificate);
+            if (certificate != null)
+            {
+                newRequest.ClientCertificates.Add(certificate);
+            }
             string content;
             using (var response = (HttpWebResponse)newRequest.GetResponse())
             {
@@ -82,6 +85,10 @@ namespace BstConnectorViewer
 
         private X509Certificate GetCertificate()
         {
+            if (string.IsNullOrEmpty(config.CertificateSerialNumber))
+            {
+                return null;
+            }
             var localMachineStore = new X509Store(StoreName.My, StoreLocation.LocalMachine);
             localMachineStore.Open(OpenFlags.ReadOnly);
             var certColl = localMachineStore.Certificates.Find(X509FindType.FindBySerialNumber,config.CertificateSerialNumber,
