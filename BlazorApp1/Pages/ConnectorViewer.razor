@@ -1,0 +1,55 @@
+﻿@page "/connectorviewer"
+@page "/connectorviewer/{document}"
+@using BstConnectorViewer.Interfaces
+@using BstConnectorViewer.Models
+
+@inject IRepository repo
+@inject NavigationManager nm
+
+<h1>ConnectorViewer (@Document)</h1>
+
+<div class my-1>
+    <button class="btn btn-primary" @onclick="@(() => nm.NavigateTo("/connectorviewer/clients"))">Clients</button>
+    <button class="btn btn-primary" @onclick="@(() => nm.NavigateTo("/connectorviewer/companies"))">Companies</button>
+    <button class="btn btn-primary" @onclick="@(() => nm.NavigateTo("/connectorviewer/contacts"))">Contacts</button>
+    <button class="btn btn-primary" @onclick="@(() => nm.NavigateTo("/connectorviewer/employees"))">Employees</button>
+    <button class="btn btn-primary" @onclick="@(() => nm.NavigateTo("/connectorviewer/projects"))">Projects</button>
+    <button class="btn btn-primary" @onclick="@(() => nm.NavigateTo("/connectorviewer/vendors"))">Vendors</button>
+</div>
+
+<ul class="list-group">
+    @foreach (var docInfo in docInfos)
+    {
+    <li class="list-group-item list-group-item-secondary w-50 rounded my-1">
+        <label>Id: @docInfo.Id</label><br />
+        <label>Code: @docInfo.Code</label><br />
+        <label>Name: @docInfo.BindableName</label><br />
+        <label>Display Name: @docInfo.DisplayName</label><br />
+        <label>Last Updated Final Date: @docInfo.LastUpdatedFinalDate</label><br />
+        <label>Last Updated By: @docInfo.LastUpdatedBy</label><br />
+    </li>
+    }
+</ul>
+
+@code {
+    private List<DocumentInfo> docInfos = new List<DocumentInfo>();
+
+    [Parameter]
+    public string Document { get; set; }
+
+    protected override void OnInitialized()
+    {
+        nm.LocationChanged -= LoadDocInfos;
+        nm.LocationChanged += LoadDocInfos;
+    }
+
+    private void LoadDocInfos(object sender, LocationChangedEventArgs args)
+    {
+        if (!string.IsNullOrWhiteSpace(Document))
+        {
+            var results = repo.GetAllDocInfos(Document);
+            docInfos = results.ToList();
+            this.StateHasChanged();
+        }
+    }
+}

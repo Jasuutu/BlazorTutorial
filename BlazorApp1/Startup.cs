@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BlazorApp1.Data;
+using BstConnectorViewer;
+using BstConnectorViewer.Interfaces;
+using BstConnectorViewer.Repositories;
 
 namespace BlazorApp1
 {
@@ -30,6 +33,9 @@ namespace BlazorApp1
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<TodoService>();
+            services.AddSingleton<ViewerConfiguration>();
+            services.AddSingleton<IDataRetriever, DataRetriever>();
+            services.AddSingleton<IRepository, DocumentRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
