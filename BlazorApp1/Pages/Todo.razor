@@ -1,0 +1,62 @@
+﻿@page "/todo"
+
+@using BlazorApp1.Data
+@inject TodoService TodoService
+
+<h1>Todo (@TodoService.Todos.Count(todo => !todo.IsDone))</h1>
+
+<!-- TodoItem List Display -->
+<ul class="list-group">
+    @foreach (var todo in TodoService.Todos)
+    {
+        @if (!todo.IsCleared)
+        {
+            <li class="list-group-item list-group-item-primary w-25">
+                <input type="checkbox" @bind="todo.IsDone" />
+                <input class="form-control-sm" @bind="todo.Title" />
+            </li>
+        }
+    }
+</ul>
+
+<!-- Input Section -->
+<div class="form-group">
+    <input type="text" class="form-control-sm" placeholder="Something todo" @bind="newTodo" @onkeyup="CheckForEnter"/>
+</div>
+<div class="form-group">
+    <button class="btn btn-primary" @onclick="AddTodo">Add todo</button>
+    <button class="btn btn-primary" @onclick="ClearDoneTasks">Clear done todos</button>
+    <button class="btn btn-primary" @onclick="ResetAllTasks">Reset all todos</button>
+</div>
+
+@code {
+    private List<TodoItem> todos = new List<TodoItem>{ new TodoItem{Title = "Test"} };
+    private string newTodo;
+
+    private void AddTodo()
+    {
+        if (!string.IsNullOrWhiteSpace(newTodo))
+        {
+            TodoService.AddTodoItem(newTodo);
+            newTodo = string.Empty;
+        }
+    }
+
+    private void CheckForEnter(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            AddTodo();
+        }
+    }
+
+    private void ClearDoneTasks()
+    {
+        TodoService.ClearDoneTodos();
+    }
+
+    private void ResetAllTasks()
+    {
+        TodoService.ResetAllTodos();
+    }
+}
