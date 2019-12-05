@@ -1,0 +1,36 @@
+name: .NET Core
+
+on: 
+  push:
+    branches:
+      - master        # only run pull request builds against master branch
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.100
+    - name: Build with dotnet
+      run: dotnet build ".\BlazorApp1.sln" --configuration Debug
+#    - name: Run tests
+#      run: dotnet test ".\RandomShopGen\RandomShopGen.sln" --filter TestCategory!=LocalOnly
+#    - name: Discord success notification
+#      env:
+#        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+#      uses: Ilshidur/action-discord@master
+#      if: success()
+#      with:
+#        args: ${{ github.event_name }} ${{ github.sha }} on branch ${{ github.ref }} passed build and test
+#    - name: Discord fail notification
+#      env:
+#        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+#      uses: Ilshidur/action-discord@master
+#      if: failure()
+#      with:
+#        args: ${{ github.event_name }} ${{ github.sha }} on branch ${{ github.ref }} failed build and test
