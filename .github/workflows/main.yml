@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master        # only run pull request builds against master branch
+      - dev
 
 jobs:
   build:
